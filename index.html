@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi API Fintech P2P</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icon (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+        
+        /* --- Style Kustom untuk Tab --- */
+        .tab-active {
+            background-color: #ffffff; /* white */
+            color: #2563EB; /* blue-600 */
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        .tab-inactive {
+            background-color: transparent;
+            color: #6B7280; /* gray-500 */
+            font-weight: 500;
+        }
+        .tab-inactive:hover {
+            background-color: #F3F4F6; /* gray-100 */
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        .tab-inactive:disabled {
+            color: #D1D5DB; /* gray-300 */
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+        .tab-inactive:disabled:hover {
+            background-color: transparent;
+        }
+        
+        /* --- Style Kustom untuk Tombol --- */
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <div class="w-full min-h-screen bg-white overflow-hidden flex flex-col">
+        
+        <!-- Header Baru -->
+        <div class="p-6 sm:p-8 bg-gradient-to-r from-blue-700 to-blue-800 text-white flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold">Simulasi Fintech</h1>
+                <p class="text-blue-100 text-sm mt-1">Visualisasi Alur Integrasi API</p>
+            </div>
+            <i class="fas fa-rocket text-5xl text-blue-400 opacity-30 transform -rotate-12"></i>
+        </div>
+
+        <!-- Kontrol Tab (Pill Style) -->
+        <div class="p-2 bg-gray-100">
+            <div class="flex rounded-lg overflow-hidden transition-all duration-300">
+                <button id="tab-verihubs" class="flex-1 py-3 px-2 text-sm text-center tab-active transition-all duration-300" onclick="showTab('verihubs')">
+                    <i class="fas fa-user-check mr-1"></i> KYC
+                </button>
+                <button id="tab-brankas" class="flex-1 py-3 px-2 text-sm text-center tab-inactive transition-all duration-300" onclick="showTab('brankas')" disabled>
+                    <i class="fas fa-piggy-bank mr-1"></i> Scoring
+                </button>
+                <button id="tab-xendit" class="flex-1 py-3 px-2 text-sm text-center tab-inactive transition-all duration-300" onclick="showTab('xendit')" disabled>
+                    <i class="fas fa-money-bill-wave mr-1"></i> Pembayaran
+                </button>
+            </div>
+        </div>
+
+    <!-- Konten -->
+    <div class="flex-1 p-6 sm:p-8">
+
+            <!-- ==================================== -->
+            <!-- ALUR 1: VERIHUBS (KYC)               -->
+            <!-- ==================================== -->
+            <div id="content-verihubs">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Langkah 1: Verifikasi Identitas (KYC)</h2>
+                <p class="text-sm text-gray-600 mb-6">Simulasi panggilan ke API Verihubs untuk verifikasi E-KTP dan Liveness Detection.</p>
+                
+                <div id="verihubs-form">
+                    <div class="mb-4">
+                        <label for="nik" class="block text-sm font-medium text-gray-700 mb-1">NIK</label>
+                        <input type="text" id="nik" value="3273123456789012" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300">
+                    </div>
+                    <div class="mb-4">
+                        <label for="selfie" class="block text-sm font-medium text-gray-700 mb-1">Upload Selfie (Simulasi)</label>
+                        <div class="flex items-center justify-center w-full px-3 py-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                            <i class="fas fa-camera text-gray-400 mr-2"></i>
+                            <span class="text-sm text-gray-500">selfie.jpg</span>
+                        </div>
+                    </div>
+                    <button id="verihubs-submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                        Verifikasi Akun Saya
+                    </button>
+                </div>
+                
+                <!-- Status/Hasil Simulasi -->
+                <div id="verihubs-status" class="mt-6 hidden">
+                    <!-- Ini akan diisi oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- ALUR 2: BRANKAS (SCORING)            -->
+            <!-- ==================================== -->
+            <div id="content-brankas" class="hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Langkah 2: Pengajuan & Scoring</h2>
+                <p class="text-sm text-gray-600 mb-6">Simulasi izin ke API Brankas (Open Finance) untuk mengambil riwayat transaksi sebagai data scoring.</p>
+                
+                <div id="brankas-form">
+                    <div class="mb-4">
+                        <label for="loan-amount" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Pinjaman</label>
+                        <input type="text" id="loan-amount" value="Rp 5.000.000" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300">
+                    </div>
+                    <p class="text-xs text-gray-500 mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <i class="fas fa-info-circle mr-1 text-slate-400"></i> Untuk menentukan limit, kami perlu menganalisis riwayat transaksi Anda secara aman.
+                    </p>
+                    <button id="brankas-connect" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                        <i class="fas fa-link mr-1"></i> Hubungkan Rekening Bank (via Brankas)
+                    </button>
+                </div>
+
+                <!-- Status/Hasil Simulasi -->
+                <div id="brankas-status" class="mt-6 hidden">
+                    <!-- Ini akan diisi oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- ALUR 3: XENDIT (PEMBAYARAN)          -->
+            <!-- ==================================== -->
+            <div id="content-xendit" class="hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Langkah 3: Pembayaran Angsuran</h2>
+                <p class="text-sm text-gray-600 mb-6">Simulasi panggilan ke API Xendit untuk membuat Virtual Account (VA) pembayaran.</p>
+                
+                <div id="xendit-form">
+                    <!-- Kartu Tagihan yang Didesain Ulang -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-lg">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Tagihan Bulan Ini:</p>
+                                <p class="text-3xl font-bold text-gray-800 mt-1">Rp 1.250.000</p>
+                            </div>
+                            <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">JATUH TEMPO</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 pt-3 border-t border-gray-100">
+                            <i class="fas fa-calendar-alt mr-1.5 text-gray-400"></i>
+                            Jatuh Tempo: 10 November 2025
+                        </p>
+                    </div>
+
+                    <button id="xendit-pay" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                        <i class="fas fa-barcode mr-1"></i> Dapatkan Kode Pembayaran
+                    </button>
+                </div>
+
+                <!-- Status/Hasil Simulasi -->
+                <div id="xendit-status" class="mt-6 hidden">
+                    <!-- Ini akan diisi oleh JavaScript -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- KONTROL TAB ---
+        const allTabs = ['verihubs', 'brankas', 'xendit'];
+        
+        function showTab(tabName) {
+            allTabs.forEach(name => {
+                const tab = document.getElementById(`tab-${name}`);
+                const content = document.getElementById(`content-${name}`);
+                
+                if (!tab) return; // Pengaman jika elemen tidak ada
+
+                if (name === tabName) {
+                    // Tampilkan konten
+                    content.classList.remove('hidden');
+                    // Aktifkan style tab
+                    tab.classList.remove('tab-inactive');
+                    tab.classList.add('tab-active');
+                } else {
+                    // Sembunyikan konten
+                    content.classList.add('hidden');
+                    // Non-aktifkan style tab
+                    if (!tab.disabled) {
+                        tab.classList.remove('tab-active');
+                        tab.classList.add('tab-inactive');
+                    }
+                }
+            });
+        }
+
+        // --- FUNGSI LOADER (Ditingkatkan) ---
+        function getLoader(text) {
+            return `
+                <div class="flex items-center justify-center p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-slate-700">${text}</span>
+                </div>
+            `;
+        }
+        
+        // --- FUNGSI PESAN SUKSES (Ditingkatkan) ---
+        function getSuccessMessage(title, text) {
+            return `
+                <div class="rounded-lg bg-green-50 p-4 border border-green-200 shadow-sm">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-bold text-green-800">${title}</h3>
+                            <div class="mt-1 text-sm text-green-700">
+                                <p>${text}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- FUNGSI PESAN ERROR (Ditingkatkan) ---
+        function getErrorMessage(title, text) {
+             return `
+                <div class="rounded-lg bg-red-50 p-4 border border-red-200 shadow-sm">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-times-circle text-red-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-bold text-red-800">${title}</h3>
+                            <div class="mt-1 text-sm text-red-700">
+                                <p>${text}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event Listener dijalankan setelah DOM dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const tabBrankas = document.getElementById('tab-brankas');
+            const tabXendit = document.getElementById('tab-xendit');
+
+            // --- ALUR SIMULASI VERIHUBS ---
+            const verihubsSubmit = document.getElementById('verihubs-submit');
+            const verihubsStatus = document.getElementById('verihubs-status');
+            const verihubsForm = document.getElementById('verihubs-form');
+
+            verihubsSubmit.addEventListener('click', () => {
+                verihubsStatus.classList.remove('hidden');
+                verihubsStatus.innerHTML = getLoader('Menghubungi Verihubs API untuk verifikasi...');
+                verihubsSubmit.disabled = true;
+
+                // Simulasi delay API
+                setTimeout(() => {
+                    const title = "Verifikasi Berhasil!";
+                    const text = "Data NIK cocok dengan Dukcapil. Lencana 'Akun Terverifikasi' <i class='fas fa-check-circle'></i> telah ditambahkan ke profil Anda.";
+                    verihubsStatus.innerHTML = getSuccessMessage(title, text);
+                    verihubsForm.classList.add('hidden');
+                    
+                    // AKTIFKAN TAB BRANKAS
+                    tabBrankas.disabled = false;
+                    setTimeout(() => showTab('brankas'), 500); // Pindah tab secara otomatis
+
+                }, 2000);
+            });
+
+
+            // --- ALUR SIMULASI BRANKAS ---
+            const brankasConnect = document.getElementById('brankas-connect');
+            const brankasStatus = document.getElementById('brankas-status');
+            
+            brankasConnect.addEventListener('click', () => {
+                brankasStatus.classList.remove('hidden');
+                brankasStatus.innerHTML = getLoader('Membuka prompt aman Brankas untuk menghubungkan akun...');
+                brankasConnect.disabled = true;
+
+                // Simulasi delay pengguna login di prompt Brankas
+                setTimeout(() => {
+                    brankasStatus.innerHTML = getLoader('Menarik data transaksi 3 bulan terakhir...');
+                    
+                    // Simulasi delay penarikan data
+                    setTimeout(() => {
+                         const title = "Akun Bank Terhubung! (via Brankas)";
+                         const text = "Data transaksi berhasil dianalisis. Skor kredit Anda: 750 (Grade B+). Pinjaman Anda disetujui.";
+                         brankasStatus.innerHTML = getSuccessMessage(title, text);
+                         brankasConnect.innerText = "Akun Telah Terhubung";
+
+                         // --- SIMULASI XENDIT DISBURSEMENT (Pencairan) ---
+                         setTimeout(() => {
+                            const disbursementTitle = "Pencairan Dana Berhasil! (via Xendit)";
+                            const disbursementText = "Notifikasi instan: Dana pinjaman sebesar Rp 5.000.000 telah dikirim ke rekening Anda.";
+                            brankasStatus.innerHTML += `<div class="mt-4">${getSuccessMessage(disbursementTitle, disbursementText)}</div>`;
+                            
+                            // AKTIFKAN TAB XENDIT
+                            tabXendit.disabled = false;
+                            setTimeout(() => showTab('xendit'), 500); // Pindah tab
+
+                         }, 2000);
+
+                    }, 2500);
+
+                }, 1500);
+            });
+
+
+            // --- ALUR SIMULASI XENDIT ---
+            const xenditPay = document.getElementById('xendit-pay');
+            const xenditStatus = document.getElementById('xendit-status');
+
+            xenditPay.addEventListener('click', () => {
+                xenditStatus.classList.remove('hidden');
+                xenditStatus.innerHTML = getLoader('Membuat Virtual Account via Xendit API...');
+                xenditPay.disabled = true;
+
+                // Simulasi delay API Xendit
+                setTimeout(() => {
+                    xenditStatus.innerHTML = `
+                        <div class="border border-gray-200 rounded-lg p-5 shadow-md">
+                            <p class="text-sm font-medium text-gray-700">Silakan lakukan pembayaran ke:</p>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia_logo.svg/2560px-Bank_Central_Asia_logo.svg.png" alt="BCA" class="h-6 mt-4 mb-2">
+                            <p class="text-sm text-gray-500">Nomor Virtual Account</p>
+                            <p class="text-2xl font-bold text-gray-900 tracking-wider">8808 1234 5678 9012</p>
+                            <p class="text-sm text-gray-500 mt-4">Total Pembayaran</p>
+                            <p class="text-2xl font-bold text-blue-600">Rp 1.250.000</p>
+                            
+                            <button id="xendit-simulate-callback" class="w-full mt-5 bg-gray-700 hover:bg-gray-800 text-white text-xs font-bold py-2.5 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                                (Simulasikan Callback Pembayaran Diterima)
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Tambahkan event listener untuk tombol simulasi callback
+                    document.getElementById('xendit-simulate-callback').addEventListener('click', () => {
+                        xenditStatus.innerHTML = getLoader('Menunggu callback (WebHook) dari Xendit...');
+                        
+                        setTimeout(() => {
+                            const title = "Pembayaran Diterima!";
+                            const text = "Callback dari Xendit telah diterima. Angsuran Anda untuk bulan ini telah lunas.";
+                            xenditStatus.innerHTML = getSuccessMessage(title, text);
+                            
+                            // Sembunyikan form tagihan
+                            document.getElementById('xendit-form').classList.add('hidden');
+                        }, 1500);
+                    });
+
+                }, 1500);
+            });
+
+        });
+    </script>
+</body>
+</html>
